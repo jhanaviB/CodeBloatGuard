@@ -11,6 +11,9 @@ Finds duplicated logic in a Python repo and flags it during PR review.
 
 Finds duplicated logic in a Python repo and flags it during PR review. Retrieval finds candidates by meaning (not shared words), a judge model decides.
 
+![Architecture Diagram](images/cbg_architecture.png)
+![S Diagram](images/cbg_architecture2.png)
+
 ## The Problem This Solves
 
 **Before CodeBloatGuard:**

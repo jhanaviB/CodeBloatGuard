@@ -10,6 +10,9 @@ name: CodeBloatGuard
 #           PR job restores. 
 on:
   pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   tests:
