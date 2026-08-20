@@ -1,0 +1,93 @@
+name: CodeBloatGuard
+
+# Three jobs.
+#
+# tests     Run the python tests to see if anything is failing.   
+#           No gemini calls
+# check     PRs only. Runs the tool on the files the PR changed and exits 1
+#           when it finds a duplicate. If a gemini key doesn't exist it skips
+# reindex   merges to main only. Converges the store and saves the cache the
+#           PR job restores. 
+on:
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -e '.[dev]'
+      - run: pytest -q
+
+  check:
+    needs: tests 
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - uses: actions/cache/restore@v4
+        id: index
+        with:
+          path: chroma_db
+          key: chroma-${{ github.event.pull_request.base.sha }}
+          restore-keys: chroma-
+
+      - run: pip install -e .
+
+      #ready ==false if we have no key and no cached index.
+      - id: preflight
+        env:
+          KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then
+            echo "::notice::No GEMINI_API_KEY secret. Skipping the duplicate check."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          elif [ ! -d chroma_db ]; then
+            echo "::notice::No cached index. Merge to main once to build a baseline."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.preflight.outputs.ready == 'true'
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: cbg check-pr --repo .
+
+  reindex:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - uses: actions/cache@v4
+        with:
+          path: chroma_db
+          key: chroma-${{ github.sha }}
+          restore-keys: chroma-
+
+      - run: pip install -e .
+
+      - env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: cbg index .

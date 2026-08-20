@@ -1,0 +1,40 @@
+[project]
+name = "codebloatguard"
+version = "0.1.0"
+description = "Finds duplicated logic in Python repos and flags it during PR review"
+readme = "README.md"
+authors = [{ name = "Jhanavi Behl" }]
+requires-python = ">=3.11"
+keywords = ["code-review", "duplicate-code", "embeddings", "langgraph", "ci"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = [
+    "google-genai",
+    "chromadb",
+    "python-dotenv",
+    "tree-sitter",
+    "tree-sitter-python",
+    "langgraph",
+    "langsmith",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+# Local judge on a Claude Pro login, no API credits. Not a runtime dependency:
+# CI runs on Gemini because a GitHub runner cannot hold a Claude session.
+claude = ["claude-agent-sdk"]
+
+[project.urls]
+Repository = "https://github.com/jhanaviB/CodeBloatGuard"
+
+[project.scripts]
+cbg = "codebloatguard.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
