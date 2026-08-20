@@ -6,6 +6,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 load_dotenv(PROJECT_ROOT / ".env")
 
 JUDGE_PROVIDER = os.getenv("CBG_PROVIDER", "gemini")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "gemini")
 
 EMBED_MODEL = "gemini-embedding-001"
 
