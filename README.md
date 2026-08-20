@@ -124,19 +124,10 @@ LANGSMITH_API_KEY=your-key
 
 `cbg eval` scores the judge against 14 hard labeled pairs in `evalset.py`. `--upload` pushes to LangSmith.
 
-## Tests
-
-```bash
-pytest   # 75 tests, no key, no network, ~1s
-```
-
-Embedder is faked as a bag-of-tokens vector; Chroma runs for real against a temp dir.
-
-## CI
+## CI/CD
 
 `.github/workflows/bloatguard.yml`: `tests` runs pytest on every push/PR. `check` runs `cbg check-pr` on changed files. `reindex` runs on merge to main to refresh the shared store/cache.
 
-Add `GEMINI_API_KEY` as a repo secret and merge to main once before opening a PR — without a baseline, `check` skips with a notice instead of failing.
 
 <!--
 ## Measured on real repos
