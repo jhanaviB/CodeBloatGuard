@@ -3,6 +3,7 @@ LLM call made by judge, triage and conventions goes through here.
 """
 
 import json
+import os
 import re
 import time
 
@@ -11,7 +12,7 @@ from langsmith import traceable
 
 from codebloatguard.config import JUDGE_PROVIDER
 
-_client = genai.Client(api_key=GEMINI_API_KEY)
+_client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 MAX_TRIES = 3
 _RETRY_AFTER = re.compile(r"retryDelay['\"]?:\s*['\"]?(\d+)")
@@ -85,11 +86,11 @@ def generate_json(model: str, prompt: str, schema: dict) -> dict:
             f"unknown CBG_PROVIDER {JUDGE_PROVIDER!r}, expected 'gemini' or 'claude'"
         )
 
-    return _generate_json_gemini(model, prompt, schema)
+    return _generate_json_model(model, prompt, schema)
 
 
-@traceable(name="gemini", run_type="llm")
-def _generate_json_gemini(model: str, prompt: str, schema: dict) -> dict:
+@traceable(name="model", run_type="llm")
+def _generate_json_model(model: str, prompt: str, schema: dict) -> dict:
     """Call the model and parse its JSON response.
 
     Traced so every prompt, response and retry is inspectable in LangSmith.

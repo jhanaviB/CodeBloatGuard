@@ -10,8 +10,12 @@ The retriever finds candidates by semantic meaning instead of an exact word matc
 When new code is added, it is compared with existing code to determine if there is an exact match or a similarity. Depending on the action, the judge model gives an advise.
 A triage model is an optimization step that decides whether the next step is a judge, widen or stop action.
 
+The default models are:
 Embedding model: `gemini-embedding-001`
 Judge model: `gemini-2.5-flash`
+Triage model: `gemini-2.5-flash`
+
+`llm.py` has code to integrate AWS Bedrock, Claude SDK and Openrouter as well.
 
 The tech stack for CodeBloatGuard is:
 
@@ -36,7 +40,6 @@ The tech stack for CodeBloatGuard is:
 
 
 ![Architecture Diagram](images/cbg_architecture.png)
-![S Diagram](images/cbg_architecture2.png)
 
 ## The Problem This Solves
 
@@ -124,6 +127,8 @@ LANGSMITH_API_KEY=your-key
 ```
 
 `cbg eval` scores the judge against 14 hard labeled pairs in `evalset.py`. `--upload` pushes to LangSmith.
+
+![Confusion Matrix](images/confusion_matrix.png)
 
 ## Tests
 
