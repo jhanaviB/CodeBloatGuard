@@ -4,10 +4,9 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-Finds duplicated logic in a Python repo and flags it during PR review.
 
-
-Finds duplicated logic in a Python repo and flags it during PR review. Retrieval finds candidates by meaning (not shared words), a judge model decides.
+This repo contains an agentic AI PR reviewer that uses repo-aware retrieval and multi-stage reasoning to detect duplicate logic and assess code reuse potential. 
+The retriever finds candidates by semantic meaning instead of shared words, which a `grep` will miss. When new code is added, we compare it with existing code to determine if there is an exact match or a similarity to the existing code. A judge and triage model efficiently make this decision. 
 
 ![Architecture Diagram](images/cbg_architecture.png)
 ![S Diagram](images/cbg_architecture2.png)
@@ -90,19 +89,6 @@ Both exit 1 when duplicates are found.
 
 API errors always return ERROR, never a false pass. Daily quota errors abort the run instead of retrying (retrying can't restore a quota that resets tomorrow).
 
-## Models
-
-Default is `gemini-2.5-flash` (free tier: 20 generation calls/day). Change per-stage in `config.py` if you have billing.
-
-Optional local alternative via Claude Agent SDK (uses your Claude Pro login, no API cost):
-
-```bash
-pip install claude-agent-sdk
-CBG_PROVIDER=claude cbg eval
-```
-
-Not usable in CI (no local Claude session there) — CI stays on a Gemini API key.
-
 ## Observability and evals
 
 ```bash
@@ -166,36 +152,3 @@ Blocker: `PROJECT_ROOT` in `config.py` resolves relative to the installed packag
 - Local and CI indexes are separate; local results are advisory.
 - Store is a local Chroma directory (swap for a Chroma server in `store.py`).
 
-## Technical Skills Demonstrated
-
-This project showcases:
-
-**AI/ML Engineering:**
-- Semantic code search using embeddings
-- LLM integration (Gemini, Claude) with structured outputs
-- Agentic workflows with LangGraph
-- Prompt engineering for code analysis
-
-**Software Engineering:**
-- CLI tool development (tree-sitter, argparse)
-- Vector database integration (ChromaDB)
-- Idempotent data pipelines (chunk ID hashing)
-- Concurrent processing (ThreadPoolExecutor)
-
-**DevOps/MLOps:**
-- GitHub Actions CI/CD
-- Workflow caching strategies
-- API quota management
-- LangSmith observability integration
-
-**Testing & Validation:**
-- 75 unit tests with pytest
-- Labeled evaluation dataset (14 hard cases)
-- Performance benchmarking on real repos
-- No mocking - uses real ChromaDB in tests
-
-**Product Thinking:**
-- Cost optimization (free tier: 20 calls/day)
-- Failure modes handled (quota exceeded, network errors)
-- Progressive enhancement (fast path + escalation)
-- User-friendly error messages
