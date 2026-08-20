@@ -52,8 +52,7 @@ The tech stack for CodeBloatGuard is:
 **After CodeBloatGuard:**
 - Automatic duplicate detection on every PR
 - Semantic search finds similar logic, not just matching words
-- LLM judge explains *why* code is duplicate
-- Fast enough for CI (processes 9,790 functions in 0.63s)
+- LLM judge explains *why* code needs to be updated or not
 
 **Real example:**
 ```python
@@ -142,8 +141,8 @@ Embedder is faked as a bag-of-tokens vector; Chroma runs for real against a temp
 
 `.github/workflows/bloatguard.yml`: `tests` runs pytest on every push/PR. `check` runs `cbg check-pr` on changed files. `reindex` runs on merge to main to refresh the shared store/cache.
 
-Add `GEMINI_API_KEY` as a repo secret and merge to main once before opening a PR — without a baseline, `check` skips with a notice instead of failing.
 
+<!--
 ## Measured on real repos
 
 Chunking throughput (free, no API calls):
@@ -183,4 +182,4 @@ Blocker: `PROJECT_ROOT` in `config.py` resolves relative to the installed packag
 - Judging isn't prioritized; a PR that exhausts quota may not have judged its closest pairs.
 - Local and CI indexes are separate; local results are advisory.
 - Store is a local Chroma directory (swap for a Chroma server in `store.py`).
-
+-->
