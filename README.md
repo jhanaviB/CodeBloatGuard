@@ -5,8 +5,35 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 
-This repo contains an agentic AI PR reviewer that uses repo-aware retrieval and multi-stage reasoning to detect duplicate logic and assess code reuse potential. 
-The retriever finds candidates by semantic meaning instead of an exact word match. When new code is added, we compare it with existing code to determine if there is an exact match or a similarity. A judge and triage model efficiently make this decision. 
+This repo contains an agentic AI PR reviewer that uses repo-aware retrieval and multi-stage reasoning to detect duplicate logic and assess code reuse potential in python repos.
+The retriever finds candidates by semantic meaning instead of an exact word match. 
+When new code is added, it is compared with existing code to determine if there is an exact match or a similarity. Depending on the action, the judge model gives an advise.
+A triage model is an optimization step that decides whether the next step is a judge, widen or stop action.
+
+Embedding model: `gemini-embedding-001`
+Judge model: `gemini-2.5-flash`
+
+The tech stack for CodeBloatGuard is:
+
+- __Language__: Python 3.11+
+
+- __LLM/AI Integration__:
+
+  - `google-genai` (for Gemini)
+  - `langgraph` (for agentic workflows)
+  - `langsmith` (for observability/tracing)
+  - `claude-agent-sdk` (optional, for local Claude integration)
+
+- __Vector Database__: `chromadb`
+
+- __Code Analysis__: `tree-sitter` and `tree-sitter-python`
+
+- __Environment Management__: `python-dotenv`
+
+- __Testing__: `pytest`
+
+- __CI/CD__: GitHub Actions
+
 
 ![Architecture Diagram](images/cbg_architecture.png)
 ![S Diagram](images/cbg_architecture2.png)
