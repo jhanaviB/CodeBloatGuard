@@ -139,7 +139,8 @@ Embedder is faked as a bag-of-tokens vector; Chroma runs for real against a temp
 
 ## CI
 
-`.github/workflows/bloatguard.yml`: `tests` runs pytest on every push/PR. `check` runs `cbg check-pr` on changed files. `reindex` runs on merge to main to refresh the shared store/cache.
+`.github/workflows/bloatguard.yml`: `tests` runs pytest on every push/PR. 
+`check` runs `cbg check-pr` on changed files. `reindex` runs on merge to main to refresh the shared store/cache.
 
 
 <!--
