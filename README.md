@@ -6,7 +6,7 @@
 
 
 This repo contains an agentic AI PR reviewer that uses repo-aware retrieval and multi-stage reasoning to detect duplicate logic and assess code reuse potential. 
-The retriever finds candidates by semantic meaning instead of an exact word match. When new code is added, we compare it with existing code to determine if there is an exact match or a similarity to the existing code. A judge and triage model efficiently make this decision. 
+The retriever finds candidates by semantic meaning instead of an exact word match. When new code is added, we compare it with existing code to determine if there is an exact match or a similarity. A judge and triage model efficiently make this decision. 
 
 ![Architecture Diagram](images/cbg_architecture.png)
 ![S Diagram](images/cbg_architecture2.png)
